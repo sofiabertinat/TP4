@@ -1,0 +1,53 @@
+//Se puede leer lectura de todos los sensores IR y calcular la altura del pasto en ese instante
+void test_CalculoAlturaPasto(void){
+
+	uint16_t valor;
+
+	valor = CalculoAlturaPasto();
+
+	TEST_ASSERT_EQUAL(ALTURA_SENSOR4, valor);
+}
+
+//Se puede leer lectura de todos los sensores IR y calcular la altura del pasto en ese instante
+void test_CalculoPromedioAlturaPasto(void){
+
+	uint16_t valor = 1;
+	uint16_t cantIter = 0;
+	uint16_t i;
+	
+	cantIter = DuracionSensado(10);
+	for(i=1;i<cantIter;i++){
+		valor = CalculoPromedioAlturaPasto(cantIter);	
+	}	
+
+
+	TEST_ASSERT_EQUAL(ALTURA_SENSOR4, valor);
+}
+
+
+//Se puede descartar lecturas medidas
+void test_DescartarMedida(void){
+
+	uint8_t desnivel;
+
+	Gyro[0]=0.52;
+
+	desnivel = descartarMedida();
+
+	TEST_ASSERT_EQUAL(DESNIVEL_ON, desnivel);
+}
+
+//Se puede leer lectura de todos los sensores IR y calcular la altura del pasto en ese instante
+void test_CalculoPromedioAlturaPastoDescartarMedida(void){
+
+	uint16_t valor = 1;
+	uint16_t cantIter = 0;
+	uint16_t i;
+	
+	cantIter = DuracionSensado(10);
+	for(i=1;i<cantIter;i++){
+	//	valor = CalculoPromedioAlturaPasto(cantIter);	
+	}	
+
+	TEST_ASSERT_EQUAL(0 , valor);
+}

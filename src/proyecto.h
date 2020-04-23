@@ -4,6 +4,7 @@
 //#include "leds.h"
 
 #include <stdint.h>
+#include "sapi.h"
 
 #define TIEMPO_LECTURA 5 // ms
 #define CANT_SENSORES 16
@@ -14,11 +15,11 @@
 #define ALTURA_ENTRE_SENSORES 20
 #define TIEMPO_LECTURA     5 // ms
 
-//#define S0		     GPIO0
-//#define S1		     GPIO1
-//#define S2		     GPIO2
-//#define S3		     GPIO3
-//#define SENSOR_SIG   CH1
+#define S0		     GPIO0
+#define S1		     GPIO1
+#define S2		     GPIO2
+#define S3		     GPIO3
+#define SENSOR_SIG   CH1
 
 #define OFFSET 1
 #define SENSOR_ON 1
@@ -26,14 +27,7 @@
 
 static uint8_t  estadoSensor[CANT_SENSORES] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-//static gpioMap_t s[4]={S0,S1,S2,S3};
-
-
-static uint16_t * puertoEntradaAC; // Variable definida para probar los test unitarios
-
-uint16_t (*valor_sensores)[CANT_SENSORES]; // Variable definida para probar los test unitarios
-
-float (*lecturaGyro)[3];// Variable definida para probar los test unitarios
+static gpioMap_t s[4]={S0,S1,S2,S3};
 
 
 uint16_t LecturaSensorIR(uint8_t sensor); 
@@ -48,14 +42,6 @@ void MedidaGiroscopio(float *rad_x, float *rad_y, float *rad_z);
 
 uint8_t  descartarMedida( void);
 
-
-void InicializarPuertoAnalogico(uint16_t * puerto); // Funcion implementada para probar los test unitarios
-
-int gpio_mux(int cont, uint8_t  valor_bin); // Funcion implementada para probar los test unitarios
-
-void InicializarSensores(uint16_t (*valor)[CANT_SENSORES]); // Funcion implementada para probar los test unitarios
-
-void InicializarGyro(float (*lectura)[3]); // Funcion implementada para probar los test unitarios
 
 
 

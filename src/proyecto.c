@@ -22,13 +22,11 @@ uint16_t LecturaSensorIR(uint8_t sensor){
 			valor = 1;
 		}else{
 			valor = 0;
-		}
-        
+		}        	
 		/*Escribe en la entrada S del multiplexor */
-        	gpio_mux(j, valor); //gpioWrite( s[j-OFFSET], valor);
-	}
-
-	return((*puertoEntradaAC)); //return(adcRead(SENSOR_SIG));
+        	gpioWrite( s[j], valor);
+	}	
+	return(adcRead(SENSOR_SIG));
 }
 
 //Funcion que calcula la altura del pasto 
@@ -73,16 +71,15 @@ uint16_t DuracionSensado(uint16_t metros){
 //Funcion que calcula el promedio de la altura del pasto 
  uint16_t CalculoPromedioAlturaPasto(uint16_t cantIter){
 	 
-	uint16_t promedio;
-	uint8_t desnivel;
+	uint16_t promedio;	
 	static uint16_t suma = 0;
-	static uint16_t cont = 0;
+	static uint16_t cont = 1;
 	static uint16_t altura = 0;		
-	
-	desnivel = descartarMedida();
-	if(desnivel==0){				
+		
+	if(descartarMedida() == 0){				
 		altura = CalculoAlturaPasto();				
-	}
+	}else
+		altura = 0;
 	//guardo la suma de todas las aturas del pasto para poder calcular el promedio
 	suma = suma + altura;		
 	//calculo el promedio de la altura del pasto hasta el momento
@@ -90,8 +87,9 @@ uint16_t DuracionSensado(uint16_t metros){
 			
 	//Me fijo si ya recorri toda la distancia que se quería sensar
 	if(cont == cantIter){				
-		cont = 0;
-		suma = 0;							
+		cont = 1;
+		suma = 0;
+								
 	}else{
 		cont++;										
 	}
@@ -104,9 +102,9 @@ void MedidaGiroscopio(float *rad_x, float *rad_y, float *rad_z){
      //Leer el sensor y guardar en estructura de control
      //mpu9250Read();
 
-     (*rad_x)= (*lecturaGyro)[0];// = mpu9250GetGyroX_rads();
-     (*rad_y)= (*lecturaGyro)[1];// = mpu9250GetGyroY_rads();
-     (*rad_z)= (*lecturaGyro)[2];// = mpu9250GetGyroZ_rads();
+     (*rad_x)= mpu9250GetGyroX_rads();
+     (*rad_y)= mpu9250GetGyroY_rads();
+     (*rad_z)= mpu9250GetGyroZ_rads();
 
 }
 
@@ -124,99 +122,7 @@ uint8_t  descartarMedida( void){
 	 }else{
 		 return 0;
 	}
-
  }
 
-// Funcion implementada para probar los test unitarios
-void InicializarSensores(uint16_t  (*valor)[CANT_SENSORES]){
-	
-	valor_sensores = valor;		
-}
 
-// Funcion implementada para probar los test unitarios
-void InicializarGyro(float (*lectura)[3]){
-	
-	lecturaGyro = lectura ;		
-}
-
-// Funcion implementada para probar los test unitarios
-void InicializarPuertoAnalogico(uint16_t * puerto){
-	
-	puertoEntradaAC = puerto;		
-}
-
-// Multiplexor Computing -> Funcion implementada para probar los test unitarios
-int gpio_mux(int cont, uint8_t valor_bin){
-
-	static int control[LARGO_CANT_SENSORES_BIN];
-	uint16_t valor; 
-
-	control[cont]= valor_bin;
-
-	if(cont == LARGO_CANT_SENSORES_BIN-OFFSET){
-		if(control[3]==1){
-			if(control[2]==1){				
-				if(control[1]==1){
-					if(control[0]==1){
-						valor = (*valor_sensores)[15];
-					}else{
-						valor = (*valor_sensores)[14];
-					}
-				}else{
-					if(control[0]==1){
-						valor = (*valor_sensores)[13];
-					}else{
-						valor = (*valor_sensores)[12];
-					}
-				}		
-               		}else{
-				if(control[1]==1){
-					if(control[0]==1){
-						valor = (*valor_sensores)[11];
-					}else{
-						valor = (*valor_sensores)[10];
-					}
-				}else{
-					if(control[0]==1){
-						valor = (*valor_sensores)[9];
-					}else{
-						valor = (*valor_sensores)[8];
-					}
-				}	
-			}			
-		}else{
-			if(control[2]==1){				
-				if(control[1]==1){
-					if(control[0]==1){
-						valor = (*valor_sensores)[7];
-					}else{
-						valor = (*valor_sensores)[6];
-					}
-				}else{
-					if(control[0]==1){
-						valor = (*valor_sensores)[5];
-					}else{
-						valor = (*valor_sensores)[4];
-					}
-				}		
-               		}else{
-				if(control[1]==1){
-					if(control[0]==1){
-						valor = (*valor_sensores)[3];
-					}else{
-						valor = (*valor_sensores)[2];
-					}
-				}else{
-					if(control[0]==1){
-						valor = (*valor_sensores)[1];
-					}else{
-						valor = (*valor_sensores)[0];
-					}
-				}	
-			}
-		}   		              						
-	}
-
-	*puertoEntradaAC = valor;
-}
 
